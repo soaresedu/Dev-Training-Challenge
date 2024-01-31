@@ -5,7 +5,7 @@ const spreadsheetId = '1D0rk5Je9Y8CWumqlU5w8j-FctJ8yCFvHPISW4OLRUts';
 const range = 'A1:H';
 const numberOfClasses = 60;
 
-let situacion = '';
+let situation = '';
 let passingGrade = 0;
 
 const auth = new google.auth.GoogleAuth({
@@ -33,7 +33,7 @@ async function getSpreadSheetValues() {
             p1: headers.indexOf('P1'),
             p2: headers.indexOf('P2'),
             p3: headers.indexOf('P3'),
-            situacion: headers.indexOf('Situação'),
+            situation: headers.indexOf('Situação'),
             pG: headers.indexOf('Nota para Aprovação Final')
         };
 
@@ -49,8 +49,8 @@ async function getSpreadSheetValues() {
             const p3 = parseFloat(row[headerIndex.p3]);
             
             calculateStudentsAverage(numberOfClasses, absences, p1, p2, p3);
-            updateData.push([situacion, passingGrade]);
-            console.log(`Name of the Student: ${name} \nNumber of Absences: ${absences} \nP1: ${p1}, P2: ${p2}, P3: ${p3} \nSituacion of the Student: ${situacion} \nPassing Grade: ${passingGrade}
+            updateData.push([situation, passingGrade]);
+            console.log(`Name of the Student: ${name} \nNumber of Absences: ${absences} \nP1: ${p1}, P2: ${p2}, P3: ${p3} \nSituation of the Student: ${situation} \nPassing Grade: ${passingGrade}
             -------------------------------------------------------------------------`);
             await updateSpreadSheetValues(updateData);
         };
@@ -67,21 +67,21 @@ function calculateStudentsAverage(numberOfClasses, absences, p1, p2, p3){
     const percentualOfAbsences = (absences/numberOfClasses) * 100;
 
     if (percentualOfAbsences > 25) {
-        situacion = 'Failed due to absence';
+        situation = 'Failed due to absence';
         passingGrade = 0;
     } else if (average < 50) {
-        situacion = 'Failed by Grade';
+        situation = 'Failed by Grade';
         passingGrade = 0;
     } else if (average >= 50 && average < 70) {
-        situacion = 'Final Exam';
+        situation = 'Final Exam';
         passingGrade = Math.round(2 * (70 - average));
         
     } else{
-        situacion = 'Approved';
+        situation = 'Approved';
         passingGrade = 0;
     }
 
-    return situacion, passingGrade.toFixed(2);
+    return situation, passingGrade.toFixed(2);
 };
 
 async function updateSpreadSheetValues(data){
